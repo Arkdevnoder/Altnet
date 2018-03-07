@@ -1,4 +1,4 @@
-<?php include 'proto_start.php'; ?>
+<?php include __DIR__.'/engine/proto_start.php'; ?>
 <!DOCTYPE html>
 <html>
 <head>
