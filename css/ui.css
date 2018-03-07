@@ -1,0 +1,372 @@
+body {
+	margin: 0px;
+}
+* { 
+	padding: 0px;
+	font-family: 'Arimo', sans-serif;
+}
+
+::-webkit-input-placeholder {color: white; opacity:1;}
+::-moz-placeholder          {color: white; opacity:1;}
+:-moz-placeholder           {color: white; opacity:1;}
+:-ms-input-placeholder      {color: white; opacity:1;}
+:focus::-webkit-input-placeholder {opacity:0;}
+:focus::-moz-placeholder          {opacity:0;}
+:focus:-moz-placeholder           {opacity:0;}
+:focus:-ms-input-placeholder      {opacity:0;}
+
+body::-webkit-scrollbar { width: 0; }
+body { -ms-overflow-style: none; }
+body { overflow: -moz-scrollbars-none; }
+
+.anim_05s {
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;transition: all 0.5s ease;
+}
+.anim_05s:hover {
+	-webkit-transition: all 0.5s ease;-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+
+#particles-js {
+	background: black url("./../assets/bg_particle.jpg") no-repeat;
+	background-size: cover;
+	background-position: center;
+	background-attachment: fixed;
+	position: relative;
+}
+#logo {
+	background: url("./../assets/logo.png") no-repeat;
+	background-size: cover;
+	background-position: center;
+	position: absolute;
+	top: 0px; right: 0px; left: 0px; bottom: 0px;
+	margin: auto;
+	height: 80px;
+	width: 250px;
+}
+#join_btn {
+	width: 85px;
+	height: 30px;
+	border: 1px solid white;
+	position: absolute;
+	right: 0px; left: 0px; bottom: 15px;
+	margin: auto;
+	cursor: pointer;
+	color: white;
+}
+#join_btn:hover {
+	background: rgba(255,255,255,0.5);
+	color: black !important;
+}
+#join_btn_text {
+	font-size: 17px;
+	margin-left: 22px;
+	margin-top: 6px;
+}
+@media screen and (min-width: 900px) {
+	/*#logo {
+		width: 400px;
+		height: 100px;
+		background-size: 300px 100px;
+	}*/
+	#join_btn {
+		bottom: 20px;
+	}
+}
+#wrap_reg {
+	margin-top: 0px;
+	background: black;
+	width: 100%;
+}
+#inwrap_reg {
+	max-width: 850px;
+	min-width: 200px;
+	/*background: red;*/
+	height: 200px;
+}
+#forms {
+	float: left;
+	margin-left: -10px;
+	display: inline-block;
+	height: 200px;
+	width: 50%;
+}
+#rightbar {
+	float: left;
+	display: inline-block;
+	height: 200px;
+	width: 50%;
+	color: white;
+	position: relative;
+}
+.form_1l {
+	background: transparent;
+	border: none;
+	box-shadow: 0px 0px 10px rgba(255,255,255,0.8);
+	color: white;
+	padding-left: 10px;
+	border-radius: 2px;
+}
+#layerform1 {
+	height: 30px;
+	width: 200px;
+	margin-top: 20px;
+	margin-right: 40px;
+	float: right;
+}
+#layerform1:hover {
+	box-shadow: 0px 0px 20px rgba(255,255,255,1);
+}
+#layerform2 {
+	clear: both;
+	height: 30px;
+	width: 200px;
+	margin-top: 12px;
+	margin-right: 40px;
+	float: right;
+}
+#layerform2:hover {
+	box-shadow: 0px 0px 20px rgba(255,255,255,1);
+}
+#layerform3 {
+	clear: both;
+	height: 30px;
+	width: 200px;
+	margin-top: 12px;
+	margin-right: 40px;
+	float: right;
+}
+#layerform3:hover {
+	box-shadow: 0px 0px 20px rgba(255,255,255,1);
+}
+#layerform4 {
+	clear: both;
+	height: 30px;
+	width: 200px;
+	margin-top: 12px;
+	margin-right: 40px;
+	float: right;
+}
+#layerform4:hover {
+	box-shadow: 0px 0px 20px rgba(255,255,255,1);
+}
+#layerbtn_reg {
+	float: left;
+	width: 85px;
+	height: 30px;
+	border: none;
+	border: 1px solid white;
+	background: transparent;
+	cursor: pointer;
+	color: white;
+	margin-left: -10px;
+	margin-top: 12px;
+}
+#layerbtn_reg:hover {
+	background: rgba(255,255,255,0.5);
+	color: black !important;
+}
+#instructions {
+	float: left;
+	margin: 10px;
+	margin-top: 20px;
+	width: 300px;
+	height: 110px;
+}
+#buttons {
+	clear: both;
+	margin-left: 10px;
+	float: left;
+	width: 250px;
+}
+#login_btn {
+	float: left;
+	cursor: pointer;
+	padding: 5px 50px;
+	border: 1px solid white;
+	background: transparent;
+	cursor: pointer;
+	color: white;
+	margin-top: 12px;
+	margin-left: 15px;
+}
+#login_btn:hover {
+	background: rgba(255,255,255,0.5);
+	color: black !important;
+}
+
+@media screen and (max-width: 600px) {
+	#inwrap_reg {
+		height: 400px;
+	}
+	#buttons {
+		margin-top: -10px;
+		margin-left: 30px;
+	}
+	#forms {
+		width: 100%;
+		margin: 0px;
+	}
+	#rightbar {
+		width: 100%;
+	}
+	#layerform1 {
+		float: left;
+		margin-right: -20px;
+		margin-left: 20px;
+		width: 80%;
+	}
+	#layerform2 {
+		float: left;
+		margin-right: -20px;
+		margin-left: 20px;
+		width: 80%;
+	}
+	#layerform3 {
+		float: left;
+		margin-right: -20px;
+		margin-left: 20px;
+		width: 80%;
+	}
+	#layerform4 {
+		float: left;
+		margin-right: -20px;
+		margin-left: 20px;
+		width: 80%;
+	}
+	#instructions {
+		/*display: none;*/
+		position: absolute;
+		bottom: 25px;
+		left: 30px;
+		margin: auto;
+		float: right;
+	}
+}
+#storage {
+	padding: 1px;
+	height: 100px;
+	background: black;
+	width: 100%;
+}
+#storage_text {
+	padding: 1px;
+	color: grey;
+	font-size: 17px;
+	margin-top: 40px;
+}
+
+#page_login {
+	display: none;
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	background: rgba(0,0,0,0.95);
+	z-index: 999999;
+}
+#close_btn {
+	position: fixed;
+	top: 10px; right: 10px;
+	height: 30px;
+	width: 30px;
+	background: url('./../assets/close.png') no-repeat;
+	background-size: cover;
+	cursor: pointer;
+}
+#login_window {
+	position: fixed;
+	top: 0px; right: 0px; left: 0px; bottom: 0px;
+	margin: auto;
+	height: 220px;
+	width: 250px;
+}
+
+#login_window_recovery {
+	display: none;
+	position: fixed;
+	top: 0px; right: 0px; left: 0px; bottom: 0px;
+	margin: auto;
+	height: 220px;
+	width: 250px;
+}
+
+#fields_login {
+	width: 200px;
+	height: 80px;
+	margin-top: 70px;
+	float: left;
+}
+#login_sbtn {
+	width: 40px;
+	height: 40px;
+	margin-top: 90px;
+	margin-left: 10px;
+	background: transparent url('./../assets/loginbtn.png');
+	background-position: center;
+	background-size: 40px 50px;
+	border: none;
+	cursor: pointer;
+}
+
+#login_sbtn:hover {
+	box-shadow: 0px 0px 20px rgba(255,255,255,1);
+}
+
+#recovery_text {
+	clear: both;
+	color: white;
+	cursor: pointer;
+}
+#backbtn {
+	clear: both;
+	color: white;
+	cursor: pointer;
+	margin-bottom: 200px;
+}
+#layerform5 {
+	width: 190px;
+	height: 30px;
+}
+#layerform6 {
+	width: 190px;
+	height: 30px;
+	margin-top: 10px;
+}
+
+#layerform5:hover {
+	box-shadow: 0px 0px 20px rgba(255,255,255,1);
+}
+
+#layerform6:hover {
+	box-shadow: 0px 0px 20px rgba(255,255,255,1);
+}
+
+#recovery_text:hover {
+	color: lightgrey;
+}
+#status_login {
+	clear: both; 
+	color: lightgrey;
+	cursor: default;
+}
+#status_recemail {
+	clear: both; 
+	color: lightgrey;
+	cursor: default;
+}
+#greeting_wall {
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	background: rgba(0,0,0,1);
+}
+
+#staff {
+	position: absolute;
+	z-index: 9999999;
+	color: white;
+}
+
