@@ -24,17 +24,20 @@
 			<center>
 				<h3 class="clwhite">Please, choose photos</h3>
 				<form id="uploader" enctype="multipart/form-data" method="post">
-					<div class="js-fileapi-wrapper">
+					<div class="js-fileapi-wrapper" style="position: relative;">
 						<input class="noneform" id="inimg" type="file" name="my_image[]" multiple accept="image/*,image/jpeg">
-						<label onselect="alert(1)" class="photo_loadform blink_light" for="inimg">
+						<label id="photo_loadform" onselect="alert(1)" class="photo_loadform blink_light" for="inimg">
 							<div class="mt">
 								Load
 							</div>
 						</label>
-						<div id="loaded_img" class="warnimg1">
-							<div id="linker" class="warnimg2">
-							PNG, JPEG, JPG
+						<div onclick="plclose()" id="ok_photo" style="display: none;"><div style="margin-top: 11px; margin-left: 0px;">Ok</div></div>
+						<div style="position: absolute; height: 129px; width: 100%; top: 129px;">
+							<div id="loaded_img" class="warnimg1">
 							</div>
+						</div>
+						<div id="linker" class="warnimg2">
+							PNG, JPEG, JPG
 						</div>
 					</div>
 				</form>
@@ -67,7 +70,7 @@ include __DIR__.'/engine/proto_join.php';
 					<div id="messages_link" class="blink_dark" onclick="dialogs();">
 						<div id="messages_icon"></div>
 					</div>
-					<div id="community_link" class="blink_dark">
+					<div id="community_link" class="blink_dark" onclick="people()">
 						<div id="community_icon"></div>
 					</div>
 				</div>
@@ -181,6 +184,7 @@ include __DIR__.'/engine/proto_join.php';
 					<div id="form_wrap" style="width: 100%;">
 						<div class="fl_r" id="form_wallbuttons">
 							<img onclick="osendphoto()" class="icon_formwall" style="margin-left: 25px;" src="/assets/image.png">
+							<div id="img_warnload"></div>
 							<img class="icon_formwall" src="/assets/file.png">
 							<img class="icon_formwall" src="/assets/video.png">
 							<input type="submit" style="margin-left: 20px;" id="submit_wall" name="send" class="submit_msg" value="Send message" onclick="send_message(this)">
@@ -188,6 +192,11 @@ include __DIR__.'/engine/proto_join.php';
 						<textarea onkeypress="return pressmsg(event)" id="messages_textarea" placeholder="Let's send any message... :)"></textarea>
 					</div>
 				</div>
+			</div>
+
+			<div class="hh"></div>
+			<div id="people_wrap">
+				
 			</div>
 
 
@@ -203,6 +212,7 @@ window.onload = resize;
 
 var gui = false;
 var peerlink = '';
+var cur_imageids;
 
 profile();
 profile_close();
@@ -216,28 +226,25 @@ function osendphoto(){
 	}
 }
 
-function showFile(e) {
-	var files = e.target.files;
-	for (var i = 0, f; f = files[i]; i++) {
-		if (!f.type.match('image.*')) continue;
-			var fr = new FileReader();
-			fr.onload = (function(theFile) {
-			return function(e) {
-			document.getElementById("loaded_img").innerHTML += 
-				"<img style='display: inline-block; height: 50px; width: 50px; background: url(" 
-				+ e.target.result + 
-				"); background-position: center; background-size: cover; margin-left: 10px; margin-top: 20px; box-shadow: 0px 0px 5px grey;' />";
-		};
-		})(f);
- 		fr.readAsDataURL(f);
-	}
+function deleteimg(i){
+	delete cur_imageids[i];
 }
 
 function submitF(e){
-	showFile(e);
+	var files = document.getElementById("inimg").files;
+	for (var i = 0, file; file = files[i]; i++) {
+		var type = file.type;
+			if(type == "image/jpeg" || type == "image/png" || type == "image/gif"){
+			var reader = new FileReader();
+			reader.onload = function(theFile) {
+				document.getElementById("loaded_img").innerHTML += 
+				"<img onclick='deleteimg("+i+")' style='display: inline-block; height: 50px; width: 50px; box-shadow: 0px 0px 10px grey; margin: 10px 5px;' src='"+theFile.target.result+"'/>";
+			};
+			reader.readAsDataURL(file);
+		}
+	}
 	var form = document.getElementById("uploader");
 	var formData = new FormData(form);
-	console.log(form);
 	document.getElementById('linker').innerHTML = '0%';
 	$(".mt").html("Loading...");
 	$.ajax({
@@ -247,13 +254,25 @@ function submitF(e){
 		cache:false, 
 		contentType: false, 
 		processData: false, 
-		success:function(data){
-			console.log(data);
-			if(data == "no_format"){
+		success:function(answer){
+			answer = answer+"_";
+			ardata = answer.split("_");
+			data = ardata[0];
+			answer = ardata[1].split(",");
+			if(data == "noformat"){
 				document.getElementById('linker').innerHTML = 'You can use only JPEG, PNG, GIF images';
 				$(".mt").html("Load");
-			} else {
+			} else if(data == "ok") {
+				answer.forEach(function(item, i, arr){
+					cur_imageids.push(item);
+				});
+				document.getElementById("img_warnload").style.display = "block";
+				document.getElementById("img_warnload").innerHTML = cur_imageids.length;
+				document.getElementById("ok_photo").style.display = "block";
+				document.getElementById("photo_loadform").style.left = "110px";
 				$(".mt").html("Add pictures");
+			} else {
+				$(".mt").html("Error");
 			}
 		},
 		error:function(data){
@@ -284,8 +303,7 @@ window.onload = function(){
 
 
 function dialogs() {
-	document.getElementById("profile_page").style.display = "none";
-	document.getElementById("chat_wrap").style.display = "none";
+	hiddenplease();
 	document.getElementById("messages_wrap").style.display = "block";
 	token = getCookie("token");
 	$.ajax({
@@ -320,6 +338,13 @@ function hiddenplease(){
 	document.getElementById("profile_page").style.display = "none";
 	document.getElementById("messages_wrap").style.display = "none";
 	document.getElementById("chat_wrap").style.display = "none";
+	document.getElementById("people_wrap").style.display = "none";
+	document.getElementById("img_warnload").style.display = "none";
+	document.getElementById("loaded_img").innerHTML = "";
+	document.getElementById("ok_photo").style.display = "none";
+	document.getElementById("photo_loadform").style.left = "140px";
+	$(".mt").html("Load");
+	cur_imageids = [];
 }
 
 function profile() {
@@ -328,6 +353,57 @@ function profile() {
 	resize();
 }
 
+function set_peer(id){
+	token = getCookie("token");
+	$.ajax({
+	url: "/engine/set_peer.php?access_token="+token+"&to="+id,
+	success: function(data){
+		try {
+			chat(data);
+		} catch(e) {
+			alert("Oops... something went wrong. Please reload the page. Error: "+e);
+		}
+	}
+	});
+}
+
+function people(){
+	hiddenplease();
+	document.getElementById("people_wrap").style.display = "block";
+	$.ajax({
+	url: "/engine/get_people.php",
+	success: function(data){
+		try {
+			data = JSON.parse(data);
+			document.getElementById("people_wrap").innerHTML = "";
+			data.forEach(function(item, i, data){
+				document.getElementById("people_wrap").innerHTML += 
+				'<div class="em_person" align="left">'+
+					'<div class="em_avatar"></div>'+
+					'<div class="em_nickname">@'+item.nickname+'</div>'+
+					'<div class="lets_write" onclick="set_peer('+item.id+')">Send message</div>'+
+				'</div>';
+			});
+		} catch(e) {
+			alert("Oops... something went wrong. Please reload the page. Error: "+e);
+		}
+	}
+	});
+	resize();
+	/*
+<div class="em_person" align="left">
+					<div class="em_avatar"></div>
+					<div class="em_nickname">@Darkspive</div>
+					<div class="lets_write">Send message</div>
+				</div>
+	*/
+}
+
+
+function nullchat(){
+	hiddenplease();
+	document.getElementById("chat_wrap").style.display = "block";
+}
 
 
 
@@ -349,7 +425,7 @@ function chat(p){
 			});
 			document.getElementById("safe_zone").innerHTML += "<div style='width: 100%; height: 14px;'></div>";
 			var block = document.getElementById("safe_zone");
-			block.scrollTop = block.scrollHeight;
+			block.scrollTop = block.scrollHeight + 1000;
 		} catch(e) {
 			console.log("Oops... something went wrong. Please reload the page. Server: "+data+" Error: "+e);
 		}
@@ -364,6 +440,25 @@ function chat(p){
 
 function set_message(item){
 	var time = date("d.m.Y (H:i)", item.time);
+	var prepared_attachment = "";
+	if(item.attachment !== "0" && item.attachment !== ""){
+		prepared_attachment = item.attachment;
+		var attachment = prepared_attachment.split(",");
+		var count = attachment.length;
+	} else {
+		var count = 0;
+	}
+	if(count == 1){
+		var crop = "<br><img style='margin: 10px; max-width: 100%; display: inline-block;' src='./engine/get_file.php?attachment="+attachment[0]+" '/>";
+	} else if(count > 1) {
+		var images = "";
+		attachment.forEach(function(attach, i, arr){
+			images += "<img style='margin: 10px 5px; height: 100px; display: inline-block;' src='./engine/get_file.php?attachment="+attach+" '  />";
+		});
+		var crop = "<br>"+images+"";
+	} else {
+		var crop = "";
+	}
 	if(item.out == 0){
 		var data = $("#safe_zone").children().last().attr("class");
 		var check = "";
@@ -371,17 +466,17 @@ function set_message(item){
 			check = explode(data)[0];
 		}
 		if(check == "message_wrap_in"){
-			document.getElementById("safe_zone").innerHTML +=
-			'<div style="min-height: 30px; box-shadow: none;" class="message_wrap_in '+item.id+' blink_dark2" align="left">'+
-				'<div style="font-size: 15px; margin-top: 8px; margin-left: 60px;" class="message_in msg'+item.id+'">'+item.message+'</div>'+
+			document.getElementById("safe_zone").innerHTML += 
+			'<div style="min-height: 30px; box-shadow: none;" class="message_wrap_in '+item.id+' blink_dark2" align="left">'+ 
+				'<div style="font-size: 15px; margin-top: 8px; margin-left: 60px;" class="message_in msg'+item.id+'">'+item.message+'  '+crop+' </div>'+
 				'<div style="display: none;" class="message_time_in">'+time+'</div>'+
 			'</div>';
 		} else {
 			document.getElementById("safe_zone").innerHTML +=
-			'<div style="margin-top: 8px;" class="message_wrap_in '+item.id+' blink_dark2" align="left">'+
+			'<div style="margin-top: 8px;" class="message_wrap_in '+item.id+' blink_dark2" align="left">'+ 
 				'<div class="message_avatar_in"></div>'+
 				'<div class="message_header_in">@'+item.nickname+'</div>'+
-				'<div class="message_in msg'+item.id+'">'+item.message+'</div>'+
+				'<div class="message_in msg'+item.id+'">'+item.message+' '+crop+' </div>'+
 				'<div class="message_time_in">'+time+'</div>'+
 			'</div>';
 		}
@@ -393,16 +488,16 @@ function set_message(item){
 		}
 		if(check == "message_wrap_out"){
 			document.getElementById("safe_zone").innerHTML +=
-			'<div style="min-height: 30px; box-shadow: none;" class="message_wrap_out '+item.id+' blink_dark2" align="right">'+
-				'<div style="font-size: 15px; margin-top: 8px; margin-right: 60px;" class="message_out msg'+item.id+'">'+item.message+'</div>'+
+			'<div style="min-height: 30px; box-shadow: none;" class="message_wrap_out '+item.id+' blink_dark2" align="right">'+ 
+				'<div style="font-size: 15px; margin-top: 8px; margin-right: 60px;" class="message_out msg'+item.id+'">'+item.message+' '+crop+'  </div>'+
 				'<div style="display: none;" class="message_time_out">'+time+'</div>'+
 			'</div>';
 		} else {
 			document.getElementById("safe_zone").innerHTML +=
-			'<div style="margin-top: 8px;" class="message_wrap_out '+item.id+' blink_dark2" align="right">'+
+			'<div style="margin-top: 8px;" class="message_wrap_out '+item.id+' blink_dark2" align="right">'+ 
 				'<div class="message_avatar_out"></div>'+
 				'<div class="message_header_out">@'+item.nickname+'</div>'+
-				'<div class="message_out msg'+item.id+'">'+item.message+'</div>'+
+				'<div class="message_out msg'+item.id+'">'+item.message+'  '+crop+'   </div>'+
 				'<div class="message_time_out">'+time+'</div>'+
 			'</div>';
 		}
@@ -515,12 +610,20 @@ function send_message() {
 	var url = "/engine/send_message.php";
 	$(".submit_msg").val("Loading...");
 	peerdata = peerlink.split("_");
+	message = document.getElementById("messages_textarea").value;
+	if(message == "" && cur_imageids.length == 0 || message == "\n"){
+		document.getElementById("messages_textarea").value = "";
+		$(".submit_msg").val("Send message");
+		return null;
+	}
 	var data = {
 		"access_token": getCookie("token"),
-		"message": document.getElementById("messages_textarea").value,
+		"message": message,
 		"is_public": "0",
-		"peer": peerdata[0]
+		"peer": peerdata[0],
+		"attachment": cur_imageids.join(",")
 	}
+	cur_imageids = [];
 	$.ajax({
     	url: url,
     	method: "post",
